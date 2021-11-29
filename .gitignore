@@ -122,4 +122,4 @@ dist
 #   Important file to ignore: env.json. It contains the token   #
 #                                                               #
 #################################################################
-.env.json
+env.json
