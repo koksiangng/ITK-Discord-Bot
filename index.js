@@ -1,34 +1,60 @@
 //Loads modules (https://stackoverflow.com/questions/9901082/what-is-this-javascript-require)
-const Discord = require('discord.js');
+const { Client, Intents } = require('discord.js');
 
+//Token saved somewhere else for security.
 let data = require('./config.json');
-var token = data.data.token;
+var token = data.token;
 
-const client = new Discord.Client({
-    allowedMentions:{
-        parse: ['users', 'roles'],
-        repliedUser: true,
-    },
+const bot = new Client({
+    //Guilds refer to the "servers" (https://discord.com/developers/docs/resources/guild)
     intents:[
-        "GUILDS",
-        "GUILD_MESSAGES",
-        "GUILD_PRESENCES",
-        "GUILD_MEMBERS",
-        "GUILD_MESSAGE_REACTIONS",
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_PRESENCES,
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     ]
 });
 
-//Displays on server.
-client.on("ready", () =>{
+
+bot.once("ready", () =>{
     console.log("Bot deployed");
 })
 
-//Bot actions
-client.on("messageCreate", async message => {
+//Bot actions - responding to certain message content
+bot.on("messageCreate", async message => {
     if(message.content === "!ping"){
         message.channel.send("Hi!");
     }
 })
 
+//Bot actions - reacting to certain message content
+bot.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
 
-client.login(token);
+	const { commandName } = interaction;
+
+	if (commandName === 'ping') {
+		await interaction.reply('Pong!');
+	} else if (commandName === 'server') {
+		await interaction.reply('Server info.');
+	} else if (commandName === 'user') {
+		await interaction.reply('User info.');
+	}
+
+	if (commandName === 'react') {
+		const message = await interaction.reply({ content: 'You can react with Unicode emojis!', fetchReply: true });
+		message.react('😄');
+	}
+
+    if (commandName === 'fruits') {
+		interaction.reply('Reacting with fruits!');
+		const message = await interaction.fetchReply();
+		message.react('🍎');
+		message.react('🍊');
+		message.react('🍇');
+	}
+});
+
+
+bot.login(token);
