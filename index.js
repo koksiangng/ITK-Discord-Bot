@@ -4,10 +4,8 @@ const { Client, Collection, Intents } = require('discord.js');
 //File system https://discordjs.guide/creating-your-bot/command-handling.html#reading-command-files
 const fs = require('fs');
 
-
-
 //Token saved somewhere else for security.
-let data = require('./config.json');
+const data = require('./config.json');
 let token = data.token;
 
 //Imports
@@ -26,9 +24,12 @@ const client = new Client({
 });
 
 client.commands = new Collection();
-//Get the commmandfiles
+//Get the command and eventfiles
 //https://discordjs.guide/creating-your-bot/command-handling.html#reading-command-files
+//https://discordjs.guide/creating-your-bot/event-handling.html#individual-event-files
+
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
@@ -37,12 +38,14 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-
-//Bot startup
-client.once("ready", () =>{
-    console.log(`${client.user.username} deployed`);
-	//roleClaim(bot)
-})
+for (const file of eventFiles) {
+	const event = require(`./events/${file}`);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
 
 //Bot actions - responding to certain message content
 client.on("messageCreate", message => {
@@ -59,8 +62,6 @@ client.on("messageCreate", message => {
 //Check deploy-commands.js to check 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
-
-	const { commandName } = interaction;
 
 	//Commands in Discord starts with /<command>
 	//Ex: to run "ping", use /ping
