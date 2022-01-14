@@ -5,8 +5,8 @@ const { Client, Collection, Intents } = require('discord.js');
 const fs = require('fs');
 
 //Token saved somewhere else for security.
-const data = require('./config.json');
-let token = data.token;
+const config = require('./config.json');
+let token = config.token;
 
 //Imports
 //const roleClaim = require('./role-claim');
@@ -16,9 +16,9 @@ const client = new Client({
     intents:[
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES,
+		Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
         Intents.FLAGS.GUILD_PRESENCES,
         Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
 		Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS
     ]
 });
@@ -31,6 +31,10 @@ client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
+//Have to run:
+//node deploy-commands.js
+//when edited/added new commands.
+//For commands
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	// Set a new item in the Collection
@@ -38,6 +42,7 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
+//For events
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);
 	if (event.once) {
@@ -47,19 +52,8 @@ for (const file of eventFiles) {
 	}
 }
 
-//Bot actions - responding to certain message content
-client.on("messageCreate", message => {
-    if(message.content === "!ping"){
-        //message.channel.send("pong!");
-		message.reply({
-			content: 'pong'
-		})
-    }
-})
-
-
-//Bot actions - reacting to certain message content
-//Check deploy-commands.js to check 
+//Will try to integrate into "interactionCreate.js"
+//Mainly used to activate commands
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
@@ -75,7 +69,6 @@ client.on('interactionCreate', async interaction => {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
-
 });
 
 

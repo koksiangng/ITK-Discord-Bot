@@ -3,7 +3,7 @@
 //Bot startup
 module.exports = {
 	name: 'ready',
-	once: true, //Run only once?
+	once: true, //Only run once?
 	execute(client) {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 	},
