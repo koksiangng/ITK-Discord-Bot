@@ -19,7 +19,7 @@ module.exports = {
         .addIntegerOption(option => option
             .setName('time')
             .setDescription('Enter the amount of time in minutes')
-            .setRequired(true))
+            .setRequired(false))
         ,
 	async execute(interaction) {
 
@@ -36,7 +36,8 @@ module.exports = {
             active_reactions.push(reaction_numbers[i]);
         }
         
-        //Only get reactions part of the original reactions by Nat and no reaction by Nat.
+        //includecheck: checks if relevant emoji has been reacted with
+        //idcheck: checks that it's not the author (Nat)
         const filter = (reaction, user) => {
             const includecheck = active_reactions.includes(reaction.emoji.name);
             const idcheck = user.id !== msg.author.id;
@@ -44,11 +45,13 @@ module.exports = {
         };
     
         //Create collector with filter and time
-        const collector = msg.createReactionCollector({ filter, time: t });
+        const collector = msg.createReactionCollector( { filter, time: t, dispose: true });
         
         //On collect - collect
         collector.on('collect', (reaction, user) => {
             console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
+            //console.log(reaction)
+            reaction.users.remove(user).catch(e => console.error(e));
         });
         
         //On collect - end
@@ -65,12 +68,7 @@ module.exports = {
         */
         
         /*
-        msg.react('👍').then(() => msg.react('👎'));
-
-        const filter = (reaction, user) => {
-            return ['👍', '👎'].includes(reaction.emoji.name) && user.id === interaction.user.id;
-        };
-        
+       
         msg.awaitReactions({ filter, max: 1, time: 60000, errors: ['time'] })
             .then(collected => {
                 const reaction = collected.first();
@@ -86,21 +84,7 @@ module.exports = {
             });
         
         */
-        
-        /*
-        collector.on('collect', (reaction, user) => {
-            console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
-        });
-        
-        collector.on('end', collected => {
-            console.log(`Collected ${collected.size} items`);
-        });
-        */
 
-        //msg.reactions.removeAll().catch(error => console.error('Failed to clear reactions:', error));
-
-
-        
         //https://stackoverflow.com/questions/65604549/discordjs-bot-is-not-removing-users-reaction-in-a-dm
 	},
 };

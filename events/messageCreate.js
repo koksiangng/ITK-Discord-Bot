@@ -7,7 +7,7 @@ module.exports = {
 		if(message.content === "!ping"){
             //message.channel.send("pong!");
 		    message.reply({
-			    content: 'pong'
+			    content: 'pong!'
 		    })
         }
 	},
