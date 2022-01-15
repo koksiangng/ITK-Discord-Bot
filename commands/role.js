@@ -25,6 +25,7 @@ module.exports = {
         const msg = await interaction.channel.send({embeds: [embed]});
         msg.react('💚');
 
+        /*
         //includecheck: checks if relevant emoji has been reacted with
         //idcheck: checks that it's not the author (Nat)
         const filter = (reaction, user) => {
@@ -49,5 +50,6 @@ module.exports = {
             //reaction.message.guild.members.cache.get(user.id).roles.add(role);
             reaction.message.guild.members.cache.get(user.id).roles.add("931929374188523580");
         })
+        */
 	},
 };

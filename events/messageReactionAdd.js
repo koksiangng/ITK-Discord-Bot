@@ -8,6 +8,7 @@ module.exports = {
 		console.log("heh, u stoopid");
         //let role = reaction.message.guild.roles.find(role => role.name === "Marine");
 		let role = reaction.message.guild.roles.cache.find(role => role.name === "Marine");
+		let all = reaction.message.guild.roles.cache.find(role => role);
 		const g = reaction.message.guild;
 		const m = g.members.cache.find(member => member.id === user.id);
 		//m.addRole(role)
