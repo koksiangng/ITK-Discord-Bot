@@ -3,6 +3,17 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 //https://discordjs.guide/interactions/registering-slash-commands.html#options
 //Options
+
+// Polling system where the voters can only vote once.
+// They are DMed what they voted, and if they try again,
+// they will be DMed that they can't vote again.
+// The pollmaker will receive the result in the form of a DM.
+// Setting up requires:
+// /poll
+// 1. Name of the poll (String)
+// 2. Amount of options (Int)
+// 3. How long the poll is up (Int)
+
 //First one is: \u0031\u20E3... \u0039\u20E3
 var reaction_numbers = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣"];
 var active_reactions = [];
@@ -83,7 +94,6 @@ module.exports = {
             }
         });
         
-
         //On collect - end
         //Sends the final information to pollmaker.
         //https://discord.js.org/#/docs/discord.js/stable/class/Collector?scrollTo=e-collect
