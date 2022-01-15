@@ -11,7 +11,10 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('poll')
 		.setDescription('Sets up a poll with desired amount of voting choices (max 9)')
-        //.addStringOption(option => option.setName('input').setDescription('Enter a string').setRequired(true))
+        .addStringOption(option => option
+            .setName('name')
+            .setDescription('Set the poll name')
+            .setRequired(true))
         .addIntegerOption(option => option
             .setName('poll')
             .setDescription('Enter amount of options (max 9)')
@@ -22,19 +25,23 @@ module.exports = {
             .setRequired(false))
         ,
 	async execute(interaction) {
-
+        var reacted = []; //To keep track of unique voters.
+        var result; //Stores the vote to later send to pollmaker.
         //Get the values
+        const pollname = interaction.options.getString('name');
         const amount = interaction.options.getInteger('poll');
+        //const t = interaction.options.getInteger('time') * 5000; // For testing
         const t = interaction.options.getInteger('time') * 1000 * 60; // => to 1 sec => to 1 min 
 
         //Post msg
-        const msg = await interaction.reply({ content: 'React to vote', fetchReply: true});
+        const msg = await interaction.reply({ content: `React to poll "${pollname}" by voting:`, fetchReply: true});
 
         //Add the reactions to post
         for(let i = 0; i < amount; i++){
             msg.react(reaction_numbers[i]);
             active_reactions.push(reaction_numbers[i]);
         }
+        result = new Array(active_reactions.length).fill(0);
         
         //includecheck: checks if relevant emoji has been reacted with
         //idcheck: checks that it's not the author (Nat)
@@ -45,46 +52,52 @@ module.exports = {
         };
     
         //Create collector with filter and time
+        //Can set max: 1, to vote once, but then can't remove name on collect
         const collector = msg.createReactionCollector( { filter, time: t, dispose: true });
-        
-        //On collect - collect
-        collector.on('collect', (reaction, user) => {
-            console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
-            //console.log(reaction)
-            reaction.users.remove(user).catch(e => console.error(e));
-        });
-        
-        //On collect - end
-        collector.on('end', collected => {
-            console.log(`Collected ${collected.size} items`);
-        });
-        
-        /*
-        msg.awaitReactions( {time: t, errors: ['time'] })
-        .then(collected => console.log(collected.size))
-        .catch(collected => {
-            console.log(`After a minute, only ${collected.size} out of 4 reacted.`);
-        });
-        */
-        
-        /*
-       
-        msg.awaitReactions({ filter, max: 1, time: 60000, errors: ['time'] })
-            .then(collected => {
-                const reaction = collected.first();
-        
-                if (reaction.emoji.name === '👍') {
-                    msg.reply('You reacted with a thumbs up.');
-                } else {
-                    msg.reply('You reacted with a thumbs down.');
-                }
-            })
-            .catch(collected => {
-                msg.reply('You reacted with neither a thumbs up, nor a thumbs down.');
-            });
-        
-        */
 
-        //https://stackoverflow.com/questions/65604549/discordjs-bot-is-not-removing-users-reaction-in-a-dm
+        //On collect - collect
+        //People can vote anonymously (removes vote after voted)
+        //People can only vote once. 
+        //https://discord.js.org/#/docs/discord.js/stable/class/Collector?scrollTo=e-collect
+        collector.on('collect', (reaction, user) => {
+            reaction.users.remove(user).catch(e => console.error(e));
+
+            if (!reacted.includes(user.id)){
+                reacted.push(user.id);
+                user.send(`You reacted to ${reaction.emoji.name} to the poll "${pollname}"`);
+
+                switch(reaction.emoji.name){
+                    case reaction_numbers[0]: result[0] = result[0] + 1; break;
+                    case reaction_numbers[1]: result[1] = result[1] + 1; break;
+                    case reaction_numbers[2]: result[2] = result[2] + 1; break;
+                    case reaction_numbers[3]: result[3] = result[3] + 1; break;
+                    case reaction_numbers[4]: result[4] = result[4] + 1; break;
+                    case reaction_numbers[5]: result[5] = result[5] + 1; break;
+                    case reaction_numbers[6]: result[6] = result[6] + 1; break;
+                    case reaction_numbers[7]: result[7] = result[7] + 1; break;
+                    case reaction_numbers[8]: result[8] = result[8] + 1; break;
+                }
+
+            } else {
+                user.send(`You already voted!`);
+            }
+        });
+        
+
+        //On collect - end
+        //Sends the final information to pollmaker.
+        //https://discord.js.org/#/docs/discord.js/stable/class/Collector?scrollTo=e-collect
+        collector.on('end', () => {
+            var t = `Results from the poll ${pollname} are: \n`;
+            for(var i = 0; i < result.length; i++){
+                t = t.concat(`${result[i]} voted on ${reaction_numbers[i]}`)
+                if(i == result.length - 1){
+                    t = t.concat(".\n");
+                } else {
+                    t = t.concat(",\n");
+                }
+            }
+            interaction.member.user.send(t);
+        });
 	},
 };
