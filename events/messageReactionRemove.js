@@ -1,7 +1,6 @@
 //https://discordjs.guide/creating-your-bot/event-handling.html#individual-event-files
 
 const roleCommand = require(`../commands/role.js`)
-const messageReactionAdd = require(`./messageReactionAdd.js`)
 const config = require(`../config.json`)
 
 //Reaction remove
@@ -52,6 +51,10 @@ module.exports = {
 				case reactions[1]: removedrole = cache.find(role => role.name === relevant_roles_name[1]); break;
 				case reactions[2]: removedrole = cache.find(role => role.name === relevant_roles_name[2]); break;
 				case reactions[3]: removedrole = cache.find(role => role.name === relevant_roles_name[3]); break;
+				case reactions[4]: removedrole = cache.find(role => role.name === relevant_roles_name[4]); break;
+				case reactions[5]: removedrole = cache.find(role => role.name === relevant_roles_name[5]); break;
+				case reactions[6]: removedrole = cache.find(role => role.name === relevant_roles_name[6]); break;
+				case reactions[7]: removedrole = cache.find(role => role.name === relevant_roles_name[7]); break;
 			}
 
 			m.roles.remove(removedrole);

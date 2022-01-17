@@ -17,8 +17,11 @@ module.exports = {
 		let reactions = roleCommand.reactions;
 		let channelId = config.roleChannelId;
 		let openRoles = config.openRoles;
-		//If the reaction not part of the role-reactions, return.
-		if(!reactions.includes(reaction.emoji.name)) return;
+		//If the reaction not part of the role-reactions, remove reaction and return.
+		if(!reactions.includes(reaction.emoji.name)){
+			reaction.users.remove(user).catch(e => console.error(e));
+			return;
+		}
 		
         // Gets all roles
         let rolemapName = await reaction.message.guild.roles.cache.sort((a, b) => b.position - a.position).map(r => r.name).join(",");
@@ -53,10 +56,14 @@ module.exports = {
 				case reactions[1]: givenrole = cache.find(role => role.name === relevant_roles_name[1]); break;
 				case reactions[2]: givenrole = cache.find(role => role.name === relevant_roles_name[2]); break;
 				case reactions[3]: givenrole = cache.find(role => role.name === relevant_roles_name[3]); break;
+				case reactions[4]: givenrole = cache.find(role => role.name === relevant_roles_name[4]); break;
+				case reactions[5]: givenrole = cache.find(role => role.name === relevant_roles_name[5]); break;
+				case reactions[6]: givenrole = cache.find(role => role.name === relevant_roles_name[6]); break;
+				case reactions[7]: givenrole = cache.find(role => role.name === relevant_roles_name[7]); break;
 			}
 
 			m.roles.add(givenrole);
-			m.send(`You have now the role of "${givenrole.name}."`);
+			m.send(`You now have the role of "${givenrole.name}."`);
 		}
 	},
 };

@@ -60,6 +60,7 @@ module.exports = {
         //idcheck: checks that it's not the author (Nat)
         
         const filter = (reaction, user) => {
+            //If the reactions are not valid (i.e. react to Nats options) -> remove them.
             if(!valid_reactions.includes(reaction.emoji.name)) reaction.users.remove(user).catch(e => console.error(e));
             const includecheck = active_reactions.includes(reaction.emoji.name);
             const idcheck = user.id !== msg.author.id;
