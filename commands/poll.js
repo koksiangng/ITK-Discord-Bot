@@ -48,22 +48,26 @@ module.exports = {
         const msg = await interaction.reply({ content: `React to poll "${pollname}" by voting:`, fetchReply: true});
 
         //Add the reactions to post
+        let valid_reactions = []
         for(let i = 0; i < amount; i++){
             msg.react(reaction_numbers[i]);
+            valid_reactions.push(reaction_numbers[i]);
             active_reactions.push(reaction_numbers[i]);
         }
         result = new Array(active_reactions.length).fill(0);
         
         //includecheck: checks if relevant emoji has been reacted with
         //idcheck: checks that it's not the author (Nat)
+        
         const filter = (reaction, user) => {
+            if(!valid_reactions.includes(reaction.emoji.name)) reaction.users.remove(user).catch(e => console.error(e));
             const includecheck = active_reactions.includes(reaction.emoji.name);
             const idcheck = user.id !== msg.author.id;
             return includecheck && idcheck;
         };
     
         //Create collector with filter and time
-        //Can set max: 1, to vote once, but then can't remove name on collect
+        //Can set max: 1 to vote once, but then can't remove name on collect
         const collector = msg.createReactionCollector( { filter, time: t, dispose: true });
 
         //On collect - collect
