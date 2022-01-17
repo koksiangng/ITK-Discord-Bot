@@ -19,7 +19,6 @@ var reactions = ['💚','🎮','🎴','🥧','💻','🎥','📯','🎲'];
 // 2. gives role 'C'
 // 3. gives role 'B'
 
-var test = ['💚','🎮','🎴','🥧'];
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('role')
@@ -53,14 +52,9 @@ module.exports = {
         //https://stackoverflow.com/questions/52457004/empty-message-problem-with-discord-js-embeds/52461599
         //React with all reactions representing the ITK groups.
         const msg = await interaction.channel.send({embeds: [embed]});
-        //msg.react('💚');
         
-        //for(let i = 0; i < test.length; i++){
         for(let i = 0; i < reactions.length; i++){
             msg.react(reactions[i]);
-            //msg.react(test[i]);
         }
-        
-
 	},
 };

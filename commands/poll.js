@@ -32,8 +32,8 @@ module.exports = {
             .setRequired(true))
         .addIntegerOption(option => option
             .setName('time')
-            .setDescription('Enter the amount of time in minutes')
-            .setRequired(false))
+            .setDescription('Enter the amount of time in minutes (max 10)')
+            .setRequired(true))
         ,
 	async execute(interaction) {
         var reacted = []; //To keep track of unique voters.
@@ -41,8 +41,10 @@ module.exports = {
         //Get the values
         const pollname = interaction.options.getString('name');
         const amount = interaction.options.getInteger('poll');
-        //const t = interaction.options.getInteger('time') * 5000; // For testing
-        const t = interaction.options.getInteger('time') * 1000 * 60; // => to 1 sec => to 1 min 
+        const t = interaction.options.getInteger('time') * 10000; // For testing
+        //const t = interaction.options.getInteger('time') * 1000 * 60; // => to 1 sec => to 1 min 
+        //Max 10 min.
+        if(t > 60000) t = 60000;
 
         //Post msg
         const msg = await interaction.reply({ content: `React to poll "${pollname}" by voting:`, fetchReply: true});
@@ -58,7 +60,6 @@ module.exports = {
         
         //includecheck: checks if relevant emoji has been reacted with
         //idcheck: checks that it's not the author (Nat)
-        
         const filter = (reaction, user) => {
             //If the reactions are not valid (i.e. react to Nats options) -> remove them.
             if(!valid_reactions.includes(reaction.emoji.name)) reaction.users.remove(user).catch(e => console.error(e));
