@@ -60,7 +60,9 @@ module.exports = {
         const embed = new MessageEmbed()
         .setColor(config.NATgreen)
         .setTitle(titlename)
-        .setDescription("hi");
+        .setDescription(`Reacting to the following roles will give you the desired role.\n
+            You will receive information and news depending on the role you are assigned to: \n\n`
+        );
         
         //deferReply and deleteReply is there to make it so bot replies without showing the command.
         //https://www.reddit.com/r/Discordjs/comments/r1kwg4/reply_without_replying/
