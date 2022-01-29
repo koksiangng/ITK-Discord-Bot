@@ -1,6 +1,6 @@
 //https://discordjs.guide/creating-your-bot/command-handling.html#individual-command-files
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed, Interaction } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const config = require('../config.json');
 
 //Role reaction.
@@ -62,7 +62,7 @@ module.exports = {
         .setTitle(titlename)
         .setDescription("hi");
         
-        //deferReply and deleteReply is there to make it so bot replies with showing the command.
+        //deferReply and deleteReply is there to make it so bot replies without showing the command.
         //https://www.reddit.com/r/Discordjs/comments/r1kwg4/reply_without_replying/
         await interaction.deferReply();
         await interaction.deleteReply();
