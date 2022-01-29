@@ -73,8 +73,10 @@ module.exports = {
         //React with all reactions representing the ITK groups.
         const msg = await interaction.channel.send({embeds: [embed]});
         
+        /*
         for(let i = 0; i < reactions.length; i++){
             msg.react(reactions[i]);
         }
+        */
 	},
 };

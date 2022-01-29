@@ -8,9 +8,6 @@ const fs = require('fs');
 const config = require('./config.json');
 let token = config.token;
 
-//Imports
-//const roleClaim = require('./role-claim');
-
 const client = new Client({
     //Guilds refer to the "servers" (https://discord.com/developers/docs/resources/guild)
     intents:[
@@ -27,6 +24,7 @@ client.commands = new Collection();
 //Get the command and eventfiles
 //https://discordjs.guide/creating-your-bot/command-handling.html#reading-command-files
 //https://discordjs.guide/creating-your-bot/event-handling.html#individual-event-files
+//names need to be all lower case - Discord API
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
