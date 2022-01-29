@@ -18,6 +18,9 @@ const config = require('../config.json');
 //names need to be all lower case - Discord API
 //role message id 936989066115829822
 
+//Example usage:
+//Adds the @Marine with the emoji 🎥 to the message 9937102975174869042
+//!addrole 937102975174869042🎥 @Marine
 module.exports = {
 	name: 'messageCreate',
 	async execute(message) {
