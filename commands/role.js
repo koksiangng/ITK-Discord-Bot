@@ -23,10 +23,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('role')
 		.setDescription('Creates option to choose role with emojis!')
-        .addStringOption(option => option
-            .setName('titlename')
-            .setDescription('Set title of the embed')
-            .setRequired(true))
         ,
     reactions: ['💚','🎮','🎴','🥧','💻','🎥','📯','🎲'],
 	async execute(interaction) {
@@ -56,10 +52,10 @@ module.exports = {
         );
         */
         
-        const titlename = interaction.options.getString('titlename');
+        //const titlename = interaction.options.getString('titlename');
         const embed = new MessageEmbed()
         .setColor(config.NATgreen)
-        .setTitle(titlename)
+        .setTitle("Role selection")
         .setDescription(`Reacting to the following roles will give you the desired role.\n
             You will receive information and news depending on the role you are assigned to: \n\n`
         );
@@ -73,8 +69,10 @@ module.exports = {
         //React with all reactions representing the ITK groups.
         const msg = await interaction.channel.send({embeds: [embed]});
         
+        /*
         for(let i = 0; i < reactions.length; i++){
             msg.react(reactions[i]);
         }
+        */
 	},
 };
