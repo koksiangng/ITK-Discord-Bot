@@ -46,9 +46,6 @@ module.exports = {
             🎥: '${config_roles[5]}' Is sand the best spice? Or maybe young Skywalker was right... React here to discuss!\n
             📯: '${config_roles[6]}' Want to influence people of ITK? Well... reacting here gives you the power to do it!\n
             🎲: '${config_roles[7]}' Like to discuss opening moves in chess? Perhaps build a rail-empire in Ticket for Ride? React here!\n`)
-        .addFields(
-            {},
-            {}
         );
         */
         
