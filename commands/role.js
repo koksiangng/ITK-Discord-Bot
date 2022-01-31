@@ -5,7 +5,7 @@ const config = require('../config.json');
 
 //Role reaction.
 //In order: Marine, VG, MTG, F&B, Programming, M&T, PR, TT.
-var reactions = ['💚','🎮','🎴','🥧','💻','🎥','📯','🎲'];
+//var reactions = ['💚','🎮','🎴','🥧','💻','🎥','📯','🎲'];
 
 //To add role:
 //Edit/Add role to config.json, "openRoles"
@@ -24,7 +24,6 @@ module.exports = {
 		.setName('role')
 		.setDescription('Creates option to choose role with emojis!')
         ,
-    reactions: ['💚','🎮','🎴','🥧','💻','🎥','📯','🎲'],
 	async execute(interaction) {
         // Gets all roles
         //let rolemap = await interaction.guild.roles.cache.sort((a, b) => b.position - a.position).map(r => r.name).join(",");
