@@ -5,26 +5,13 @@ const config = require('../config.json');
 
 //Role reaction.
 //In order: Marine, VG, MTG, F&B, Programming, M&T, PR, TT.
-var reactions = ['💚','🎮','🎴','🥧','💻','🎥','📯','🎲'];
-
-//To add role:
-//Edit/Add role to config.json, "openRoles"
-//Add an emoji in "reactions"
-//Go to messageReactionAdd and add a new case.
-//Go to messageReactionRemove and add a new case.
-//The roles have to be ordered in config.json
-//e.g. if the order is "A, C, B" in config.json,
-//The reaction order will be
-// 1. gives role 'A'
-// 2. gives role 'C'
-// 3. gives role 'B'
+//Fitting emojis: ['💚','🎮','🎴','🥧','💻','🎥','📯','🎲'];
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('role')
 		.setDescription('Creates option to choose role with emojis!')
         ,
-    reactions: ['💚','🎮','🎴','🥧','💻','🎥','📯','🎲'],
 	async execute(interaction) {
         // Gets all roles
         //let rolemap = await interaction.guild.roles.cache.sort((a, b) => b.position - a.position).map(r => r.name).join(",");
@@ -65,11 +52,5 @@ module.exports = {
         //https://stackoverflow.com/questions/52457004/empty-message-problem-with-discord-js-embeds/52461599
         //React with all reactions representing the ITK groups.
         const msg = await interaction.channel.send({embeds: [embed]});
-        
-        /*
-        for(let i = 0; i < reactions.length; i++){
-            msg.react(reactions[i]);
-        }
-        */
 	},
 };
