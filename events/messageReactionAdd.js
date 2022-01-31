@@ -2,6 +2,7 @@
 
 const config = require(`../config.json`)
 
+//Adding upon message reaction.
 module.exports = {
 	name: 'messageReactionAdd',
 	async execute(reaction, user) {
@@ -19,7 +20,6 @@ module.exports = {
 		*/
 		//Get message based on the reaction
 		const msg = await reaction.message;
-		console.log(msg);
 
 		//Get the fields of the embed
 		var oldFields;
