@@ -4,7 +4,6 @@ const { MessageEmbed } = require('discord.js');
 const config = require('../config.json');
 
 //On message create
-//role message id 936989066115829822
 //message id length: 18
 //Point is to have <emoji>: <role> | (description structure?)
 
@@ -15,12 +14,13 @@ const config = require('../config.json');
 //https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/coding-guides/using-emojis.md
 //For how emoji works.
 
-//names need to be all lower case - Discord API
-//role message id 936989066115829822
-
+//Example usage:
+//Adds the @Marine with the emoji 🎥 to the messageid 9937102975174869042
+//!addrole 937102975174869042🎥 @Marine
 module.exports = {
 	name: 'messageCreate',
 	async execute(message) {
+		//For add role
 		if(message.content.startsWith("!addrole")){
 
 			//Extracts the messageId in the message content.
@@ -30,7 +30,10 @@ module.exports = {
 
 			//Regex for matching all emojis:
 			//https://stackoverflow.com/questions/64509631/is-there-a-regex-to-match-all-unicode-emojis
-			let regexEmoji = new RegExp('(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])', 'g')
+			let r1 = "(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])"
+			//Attempt to get a regex for custom emojis (Doesn't work. Have tried to concatenate regex without success).
+			//let r2 = "/^(:[^:\s]+:|<:[^:\s]+:[0-9]+>|<a:[^:\s]+:[0-9]+>)+$/";
+			let regexEmoji = new RegExp(r1, 'g');
 			let emojiReaction = message.content.match(regexEmoji);
 
 			//Regex for mention:
@@ -44,20 +47,41 @@ module.exports = {
 			//Get the title and the description of the embed
 			const oldTitle = msg.embeds[0].title;
 			var oldDescription = msg.embeds[0].description;
+			var oldFields;
+			if (msg.embeds[0].fields != null){
+				oldFields = msg.embeds[0].fields;
+			}
 
-			//Concatenating new emoji and new role
-			oldDescription = oldDescription.concat("\n", emojiReaction[0], ":", roleMention[0], "\n");
+			//Cannot add the same role again.
+			for(let i = 0; i < oldFields.length; i++){
+				
+				if(roleMention[0] === oldFields[i].value.split(':')[1]){
+					message.channel.send("The role " + roleMention[0] + " is taken");
+					return
+				}
+
+				if(emojiReaction[0] === oldFields[i].value.split(':')[0]){
+					message.channel.send("The emoji " + emojiReaction[0] + " is taken");
+					return
+				}
+				
+			}
 
 			//Creating a new embed
+			//\u200b = blank space
 			const newEmbed = new MessageEmbed()
 			.setColor(config.NATgreen)
 			.setTitle(oldTitle)
 			.setDescription(oldDescription)
+			.addFields(oldFields)
+			//.addField(emojiReaction[0], roleMention[0])
+			.addField("\u200b", emojiReaction[0] + ":" + roleMention[0])
 			;
 			
 			//Editing the embed
 			const m = await msg.edit({embeds:[newEmbed]})
 
+			//Sending messages in the channel.
 			message.channel.send("Adding emoji: " + emojiReaction[0]);
 			message.channel.send("Adding role: " + roleMention[0]);
 			message.channel.send("Reacting with the emoji: " + emojiReaction[0]);
@@ -65,6 +89,59 @@ module.exports = {
 			//React with the added emoji
 			m.react(emojiReaction[0]);
         }
+		//For remove role.
+		if(message.content.startsWith("!removerole")){
+
+			//Extracts the messageId in the message content.
+			//For some reason /d doesn't work. (returns null)
+			let regexMessageId = new RegExp('[0-9]{18}', 'g');
+			let messageId = message.content.match(regexMessageId);
+
+			//Regex for mention:
+			//https://www.reddit.com/r/Discord_Bots/comments/iicffv/if_anyone_needs_regex_to_match_an_emote_mention/
+			let regexRoleMention = new RegExp('<@!*&*[0-9]+>', 'g');
+			let roleMention = message.content.match(regexRoleMention);
+
+			//Get the role message
+			const msg = await message.channel.messages.fetch(messageId[0]);
+
+			//Get the title and the description of the embed
+			const oldTitle = msg.embeds[0].title;
+			var oldDescription = msg.embeds[0].description;
+			var oldFields;
+			if (msg.embeds[0].fields != null){
+				oldFields = msg.embeds[0].fields;
+			}
+
+			//Emoji to remove from the message
+			var emoji;
+
+			//Removing the role from the field.
+			for(let i = 0; i < oldFields.length; i++){
+				
+				if(roleMention[0] === oldFields[i].value.split(':')[1]){
+					emoji = oldFields[i].value.split(':')[0];
+					oldFields.splice(i, 1);
+				}
+				
+			}
+
+			//Creating a new embed
+			//\u200b = blank space
+			const newEmbed = new MessageEmbed()
+			.setColor(config.NATgreen)
+			.setTitle(oldTitle)
+			.setDescription(oldDescription)
+			.addFields(oldFields)
+			;
+			
+			//Editing the embed
+			const m = await msg.edit({embeds:[newEmbed]})
+
+			//Removing the emoji
+			m.reactions.cache.get(emoji).remove()
+				.catch(error => console.error('Failed to remove reactions:', error));
+		}
 
 		else{
 			//message.channel.send("pong!");
