@@ -7,6 +7,7 @@ module.exports = {
 	name: 'messageReactionRemove',
 	async execute(reaction, user) {
 		
+		//The bot now "remembers" the message.
 		if(reaction.partial){
 			try{
 				await reaction.fetch();
@@ -27,7 +28,7 @@ module.exports = {
 			return;
 		}
 		*/
-		
+
 		//Get message based on the reaction
 		const msg = await reaction.message;
 
@@ -46,6 +47,8 @@ module.exports = {
 		//The information looks like: "emoji:<@&932587792196849704>"
 		let numberRegex = new RegExp('[0-9]', 'g');
 		for(let i = 0; i < oldFields.length; i++){
+			console.log(reaction._emoji);
+			console.log(oldFields[i].value);
 			if(reaction._emoji.name === oldFields[i].value.split(':')[0]){
 				let roleId = oldFields[i].value.match(numberRegex).join("");
 				member.roles.remove(roleId);
