@@ -17,7 +17,14 @@ const client = new Client({
         Intents.FLAGS.GUILD_PRESENCES,
         Intents.FLAGS.GUILD_MEMBERS,
 		Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS
-    ]
+    ],
+	//https://discordjs.guide/popular-topics/partials.html#enabling-partials
+	//Currently used to remember old messages, and so that reactions work.
+	partials:[
+		'MESSAGE',
+		'CHANNEL',
+		'REACTION'
+	]
 });
 
 client.commands = new Collection();

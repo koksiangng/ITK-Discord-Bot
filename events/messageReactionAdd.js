@@ -7,6 +7,15 @@ module.exports = {
 	name: 'messageReactionAdd',
 	async execute(reaction, user) {
 		
+		if(reaction.partial){
+			try{
+				await reaction.fetch();
+			} catch(error){
+				console.error('Something went wrong when fetching the message:', error);
+				return;
+			}
+		}
+
 		//If the reactor is the bot - return
 		let clientId = config.clientId;
 		if(user.id === clientId) return;
@@ -18,6 +27,7 @@ module.exports = {
 			return;
 		}
 		*/
+
 		//Get message based on the reaction
 		const msg = await reaction.message;
 
