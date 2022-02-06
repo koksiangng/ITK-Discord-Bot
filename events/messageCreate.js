@@ -20,6 +20,8 @@ const config = require('../config.json');
 module.exports = {
 	name: 'messageCreate',
 	async execute(message) {
+		console.log(message);
+
 		//For add role
 		if(message.content.startsWith("!addrole")){
 
@@ -30,16 +32,35 @@ module.exports = {
 
 			//Regex for matching all emojis:
 			//https://stackoverflow.com/questions/64509631/is-there-a-regex-to-match-all-unicode-emojis
+			//Custom emojis: <:emoji_name:ID:>
 			let r1 = "(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])"
-			//Attempt to get a regex for custom emojis (Doesn't work. Have tried to concatenate regex without success).
-			//let r2 = "/^(:[^:\s]+:|<:[^:\s]+:[0-9]+>|<a:[^:\s]+:[0-9]+>)+$/";
+			//Regex for custom emojis. (Concat the regex causes problems, or I'm just bad (likely the latter))
+			let r2 = "(:[^:\s]+:|<:[^:\s]+:[0-9]+>|<a:[^:\s]+:[0-9]+>)"
 			let regexEmoji = new RegExp(r1, 'g');
-			let emojiReaction = message.content.match(regexEmoji);
+			let customEmoji = new RegExp(r2, 'g');
+			let emojiReaction; 
+			emojiReaction = message.content.match(regexEmoji);
+			//Temp solution for animated and custom emojis
+			if(emojiReaction === null){
+				message.channel.send("Invalid emoji. I'm currently only supporting non-custom emojis 😅. Blame the dev(s).")
+				return;
+			}
+
+			//If null, it means that the message contains a custom emoji
+			if(emojiReaction === null){
+				emojiReaction = message.content.match(customEmoji);
+			}
 
 			//Regex for mention:
 			//https://www.reddit.com/r/Discord_Bots/comments/iicffv/if_anyone_needs_regex_to_match_an_emote_mention/
 			let regexRoleMention = new RegExp('<@!*&*[0-9]+>', 'g');
 			let roleMention = message.content.match(regexRoleMention);
+
+			//If there is no info given, return			
+			if(messageId === null || roleMention === null){
+				return;
+			}
+
 
 			//Get the role message
 			const msg = await message.channel.messages.fetch(messageId[0]);
@@ -55,11 +76,13 @@ module.exports = {
 			//Cannot add the same role again.
 			for(let i = 0; i < oldFields.length; i++){
 				
+				//Checks the role if it has been added already
 				if(roleMention[0] === oldFields[i].value.split(':')[1]){
 					message.channel.send("The role " + roleMention[0] + " is taken");
 					return
 				}
 
+				//Checks the emoji if it has been added already
 				if(emojiReaction[0] === oldFields[i].value.split(':')[0]){
 					message.channel.send("The emoji " + emojiReaction[0] + " is taken");
 					return
