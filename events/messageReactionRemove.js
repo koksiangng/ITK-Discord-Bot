@@ -41,21 +41,42 @@ module.exports = {
 		//Find the member of reacted to the message.
 		const member = reaction.message.guild.members.cache.find(member => member.id === user.id);
 
-		//Get the role from the field in embed message and assign that to the user.
+		//Remove role from the user.
 
 		//Regex to filter out numbers from the string
-		//The information looks like: "emoji:<@&932587792196849704>"
-		let numberRegex = new RegExp('[0-9]', 'g');
+		//Custom emoji
+		//<:emoji:939986916089155594>:<@&931929374188523580>
+		//Unicode emoji
+		//😳:<@&932587538894422046>
+		//https://www.reddit.com/r/Discord_Bots/comments/iicffv/if_anyone_needs_regex_to_match_an_emote_mention/
+		let roleNumberRegex = new RegExp('<@!*&*[0-9]+>', 'g');
+		let customEmojiRegex = new RegExp(':[^:\s]*(?:::[^:\s]*)*:', 'g');
 		for(let i = 0; i < oldFields.length; i++){
-			console.log(reaction._emoji);
-			console.log(oldFields[i].value);
+
+			let emojiname = oldFields[i].value.match(customEmojiRegex);
+
+			//Unicode emoji
 			if(reaction._emoji.name === oldFields[i].value.split(':')[0]){
-				let roleId = oldFields[i].value.match(numberRegex).join("");
-				member.roles.remove(roleId);
-				let roleName = await reaction.message.guild.roles.fetch(roleId).then(role => role.name);
+				let roleId = oldFields[i].value.match(roleNumberRegex);
+				let roleNumber = roleId[0].substring(3, roleId[0].length - 1);
+				member.roles.remove(roleNumber);
+				let roleName = await reaction.message.guild.roles.fetch(roleNumber).then(role => role.name);
 				member.send(`You no longer have the role of "${roleName}."`);
 				return;
 			}
+			
+			//Custom emoji
+			if(emojiname){
+				if(reaction._emoji.name === emojiname[0].substring(1, emojiname[0].length - 1)){
+					let roleId = oldFields[i].value.match(roleNumberRegex);
+					let roleNumber = roleId[0].substring(3, roleId[0].length - 1);
+					member.roles.remove(roleNumber);
+					let roleName = await reaction.message.guild.roles.fetch(roleNumber).then(role => role.name);
+					member.send(`You no longer have the role of "${roleName}."`);
+					return;
+				}
+			}
+
 		}
 	},
 };
