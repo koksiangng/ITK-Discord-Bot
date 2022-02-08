@@ -3,6 +3,8 @@
 //https://stackoverflow.com/questions/66775729/how-can-i-find-the-id-of-a-custom-emoji-the-user-sent-and-add-it-to-the-server
 const config = require(`../config.json`)
 
+//Custom emoji
+
 //Adding upon message reaction.
 module.exports = {
 	name: 'messageReactionAdd',
@@ -45,25 +47,39 @@ module.exports = {
 		//Get the role from the field in embed message and assign that to the user.
 
 		//Regex to filter out numbers from the string
-		//The information looks like: "emoji:<@&932587792196849704>"
-		//https://stackoverflow.com/questions/64053658/get-emojis-from-message-discord-js-v12
-		let numberRegex = new RegExp('[0-9]', 'g');
+		//Custom emoji
+		//<:emoji:939986916089155594>:<@&931929374188523580>
+		//Unicode emoji
+		//😳:<@&932587538894422046>
+		//https://www.reddit.com/r/Discord_Bots/comments/iicffv/if_anyone_needs_regex_to_match_an_emote_mention/
+		let roleNumberRegex = new RegExp('<@!*&*[0-9]+>', 'g');
+		let customEmojiRegex = new RegExp(':[^:\s]*(?:::[^:\s]*)*:', 'g');
 		for(let i = 0; i < oldFields.length; i++){
-			if(i === 0){
-				console.log(reaction._emoji);
-				console.log("oldfields");
-				//<:SithDante:939986916089155594>:<@&931929374188523580>
-				//😳:<@&932587538894422046>
-				console.log(oldFields[i].value);
-			}
 
+			let emojiname = oldFields[i].value.match(customEmojiRegex);
+
+			//Unicode emoji
 			if(reaction._emoji.name === oldFields[i].value.split(':')[0]){
-				let roleId = oldFields[i].value.match(numberRegex).join("");
-				member.roles.add(roleId);
-				let roleName = await reaction.message.guild.roles.fetch(roleId).then(role => role.name);
+				let roleId = oldFields[i].value.match(roleNumberRegex);
+				let roleNumber = roleId[0].substring(3, roleId[0].length - 1);
+				member.roles.add(roleNumber);
+				let roleName = await reaction.message.guild.roles.fetch(roleNumber).then(role => role.name);
 				member.send(`You now have the role of "${roleName}."`);
 				return;
 			}
+			
+			//Custom emoji
+			if(emojiname){
+				if(reaction._emoji.name === emojiname[0].substring(1, emojiname[0].length - 1)){
+					let roleId = oldFields[i].value.match(roleNumberRegex);
+					let roleNumber = roleId[0].substring(3, roleId[0].length - 1);
+					member.roles.add(roleNumber);
+					let roleName = await reaction.message.guild.roles.fetch(roleNumber).then(role => role.name);
+					member.send(`You now have the role of "${roleName}."`);
+					return;
+				}
+			}
+
 		}
 	},
 };

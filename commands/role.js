@@ -2,6 +2,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const config = require('../config.json');
+var fs = require('fs');
 
 //Role reaction.
 //In order: Marine, VG, MTG, F&B, Programming, M&T, PR, TT.
@@ -15,8 +16,6 @@ module.exports = {
 	async execute(interaction) {
         // Gets all roles
         //let rolemap = await interaction.guild.roles.cache.sort((a, b) => b.position - a.position).map(r => r.name).join(",");
-        
-        const config_roles = config.openRoles;
 
         /*
         const embed = new MessageEmbed()
@@ -52,5 +51,13 @@ module.exports = {
         //https://stackoverflow.com/questions/52457004/empty-message-problem-with-discord-js-embeds/52461599
         //React with all reactions representing the ITK groups.
         const msg = await interaction.channel.send({embeds: [embed]});
+
+        //Add the msg id to config
+        //https://stackoverflow.com/questions/10685998/how-to-update-a-value-in-a-json-file-and-save-it-through-node-js
+        config.roleCommentId = msg.id;
+        fs.writeFile('config.json', JSON.stringify(config, null, 2), function writeJSON(err){
+            if(err) return console.log(err);
+        })
+        
 	},
 };
