@@ -13,18 +13,21 @@ module.exports = {
 		.setName('help')
 		.setDescription('Replies with a list of commands I have!'),
 	async execute(interaction) {
-		//await interaction.reply('wtf!');
-
+		
+        //Get the command files.
         const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
         const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
-
-        console.log(commandFiles);
         
+        //Concats all the commands in newline.
+        //https://support.discord.com/hc/en-us/articles/210298617-Markdown-Text-101-Chat-Formatting-Bold-Italic-Underline-
+        //Discord markdown.
         let description = "";
         for(const command of commandFiles){
-            description = description.concat("/", command.substring(0, command.length - 3), '\n');
+                
+            currentFile = require(`./${command}`);
+            description = description.concat("**/", command.substring(0, command.length - 3), "** | ", currentFile.data.description, '\n');
+            
         }
-        console.log(description);
 
         //Creating a new embed to hold
         const embed = new MessageEmbed()
