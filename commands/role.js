@@ -49,7 +49,6 @@ module.exports = {
         await interaction.deleteReply();
 
         //https://stackoverflow.com/questions/52457004/empty-message-problem-with-discord-js-embeds/52461599
-        //React with all reactions representing the ITK groups.
         const msg = await interaction.channel.send({embeds: [embed]});
 
         //Add the msg id to config
