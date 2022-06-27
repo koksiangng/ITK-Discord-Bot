@@ -23,10 +23,8 @@ module.exports = {
         //Discord markdown.
         let description = "";
         for(const command of commandFiles){
-                
             currentFile = require(`./${command}`);
             description = description.concat("**/", command.substring(0, command.length - 3), "** | ", currentFile.data.description, '\n');
-            
         }
 
         //Creating a new embed to hold
