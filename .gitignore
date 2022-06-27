@@ -122,4 +122,4 @@ dist
 #   Important file to ignore: config.json. It contains the token    #
 #                                                                   #
 #####################################################################
-config.json
+secret.json

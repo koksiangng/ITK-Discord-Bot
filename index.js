@@ -5,8 +5,8 @@ const { Client, Collection, Intents } = require('discord.js');
 const fs = require('fs');
 
 //Token saved somewhere else for security.
-const config = require('./config.json');
-let token = config.token;
+const secret = require('./secret.json');
+let token = secret.token;
 
 const client = new Client({
     //Guilds refer to the "servers" (https://discord.com/developers/docs/resources/guild)
