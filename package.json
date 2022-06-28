@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\"",
-    "lint": "npx eslint **.js **/**.js"
+    "lint": "npx eslint --ext node_modules/ **.js **/**.js"
   },
   "repository": {
     "type": "git",

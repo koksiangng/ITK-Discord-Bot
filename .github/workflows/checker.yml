@@ -30,13 +30,13 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
 
-      - name: Prepare cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      #- name: Prepare cache
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: ~/.npm
+      #    key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: |
@@ -44,7 +44,6 @@ jobs:
           npm install discord.js
 
       - run: npm run build --if-present
-      - run: npm test
 
       - name: Running eslint...
         run: npm run lint
