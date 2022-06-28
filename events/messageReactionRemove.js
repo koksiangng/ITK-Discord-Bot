@@ -21,14 +21,6 @@ module.exports = {
 		let clientId = config.clientId;
 		if(user.id === clientId) return;
 
-		//Get role channel id
-		let channelId = config.roleChannelId;
-		/*
-		if (!reaction.message.channelId === channelId){
-			return;
-		}
-		*/
-
 		//Get message based on the reaction
 		const msg = await reaction.message;
 
@@ -50,7 +42,7 @@ module.exports = {
 		//😳:<@&932587538894422046>
 		//https://www.reddit.com/r/Discord_Bots/comments/iicffv/if_anyone_needs_regex_to_match_an_emote_mention/
 		let roleNumberRegex = new RegExp('<@!*&*[0-9]+>', 'g');
-		let customEmojiRegex = new RegExp(':[^:\s]*(?:::[^:\s]*)*:', 'g');
+		let customEmojiRegex = new RegExp(':[^:s]*(?:::[^:s]*)*:', 'g');
 		for(let i = 0; i < oldFields.length; i++){
 
 			let emojiname = oldFields[i].value.match(customEmojiRegex);

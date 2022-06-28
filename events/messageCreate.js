@@ -1,7 +1,6 @@
 //https://discordjs.guide/creating-your-bot/event-handling.html#individual-event-files
 
 const { MessageEmbed } = require('discord.js');
-const role = require('../commands/role');
 const config = require('../config.json');
 
 //On message create
@@ -23,7 +22,10 @@ const config = require('../config.json');
 module.exports = {
 	name: 'messageCreate',
 	async execute(message) {
-
+		//msg, oldDescription and oldFields used for !addrole and !removerole
+		var msg;
+		var oldDescription;
+		var oldFields;
 		//For add role
 		if(message.content.startsWith("!addrole")){
 
@@ -38,7 +40,7 @@ module.exports = {
 			//Custom emojis: <:emoji_name:ID:>
 			let r1 = "(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])";
 			//Regex for custom emojis. (Concat the regex causes problems, or I'm just bad (likely the latter))
-			let r2 = "(:[^:\s]+:|<:[^:\s]+:[0-9]+>|<a:[^:\s]+:[0-9]+>)";
+			let r2 = "(:[^:s]+:|<:[^:s]+:[0-9]+>|<a:[^:s]+:[0-9]+>)";
 			//Regex for animated emojis.
 			//let r3 = "(?<=<a?:.*:)\d*(?=>)";
 			let regexEmoji = new RegExp(r1, 'g');
@@ -70,7 +72,6 @@ module.exports = {
 			}
 
 			//Get the role message
-			var msg;
 			if(Array.isArray(messageId)){
 				msg = await message.channel.messages.fetch(messageId[0]);
 			} else {
@@ -80,15 +81,14 @@ module.exports = {
 
 			//Get the title and the description of the embed
 			const oldTitle = msg.embeds[0].title;
-			var oldDescription = msg.embeds[0].description;
-			var oldFields;
+			oldDescription = msg.embeds[0].description;
 			if (msg.embeds[0].fields != null){
 				oldFields = msg.embeds[0].fields;
 			}
 
 			//Cannot add the same role again.
 			let roleNumberRegex = new RegExp('<@!*&*[0-9]+>', 'g');
-			let customEmojiRegex = new RegExp(':[^:\s]*(?:::[^:\s]*)*:', 'g');
+			let customEmojiRegex = new RegExp(':[^:s]*(?:::[^:s]*)*:', 'g');
 			for(let i = 0; i < oldFields.length; i++){
 				
 				let emojiname = oldFields[i].value.match(customEmojiRegex);
@@ -154,7 +154,6 @@ module.exports = {
 			let roleMention = message.content.match(regexRoleMention);
 
 			//Get the role message
-			var msg;
 			if(Array.isArray(messageId)){
 				msg = await message.channel.messages.fetch(messageId[0]);
 			} else {
@@ -163,8 +162,7 @@ module.exports = {
 				
 			//Get the title and the description of the embed
 			const oldTitle = msg.embeds[0].title;
-			var oldDescription = msg.embeds[0].description;
-			var oldFields;
+			oldDescription = msg.embeds[0].description;
 			if (msg.embeds[0].fields != null){
 				oldFields = msg.embeds[0].fields;
 			}
@@ -201,15 +199,6 @@ module.exports = {
 			//Removing the emoji
 			m.reactions.cache.get(emoji).remove()
 				.catch(error => console.error('Failed to remove reactions:', error));
-		}
-
-		else{
-			//message.channel.send("pong!");
-			/*
-		    message.reply({
-			    content: 'pong!'
-		    })
-			*/
 		}
 	},
 };
