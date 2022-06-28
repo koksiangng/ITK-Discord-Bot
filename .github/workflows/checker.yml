@@ -30,11 +30,13 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
 
-      - name: Cache modules
-        uses: actions/cache@v3
+      - name: Prepare cache
+        uses: actions/cache@v2
         with:
-          path: package-lock.json
-          key: node-cache-Linux-npm-2256291b5d5220db7cd0a0f287bcb88bd2bc9ddd063349c035632c2478539750
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: |
