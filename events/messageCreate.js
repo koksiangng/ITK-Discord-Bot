@@ -26,6 +26,7 @@ module.exports = {
 		var msg;
 		var oldDescription;
 		var oldFields;
+
 		//For add role
 		if(message.content.startsWith("!addrole")){
 

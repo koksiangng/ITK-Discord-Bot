@@ -1,6 +1,6 @@
 //https://discordjs.guide/creating-your-bot/command-handling.html#individual-command-files
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, Permissions } = require('discord.js');
 const config = require('../config.json');
 var fs = require('fs');
 
@@ -28,6 +28,11 @@ module.exports = {
 		.setDescription('Creates option to choose role with emojis!')
         ,
 	async execute(interaction) {
+        //Only members with the permission can do this command, otherwise return.
+        if(!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_ROLES)){
+            await interaction.member.send("You don't have permission to manage roles. Blame the root/soot 😇");
+            return;
+        }
 
         //The embed message
         const embed = new MessageEmbed()
