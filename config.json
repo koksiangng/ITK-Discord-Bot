@@ -2,14 +2,12 @@
   "_comment": "GuildId = Test server atm, I guess clientID = application ID, permissions = 8 = admin",
   "_invite_bot": "https://discord.com/oauth2/authorize?client_id=914948865218707497&permissions=8&scope=bot%20applications.commands",
   "_check_this_link": "https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links",
-
   "NATgreen": "#00FF00",
   "NATlightgreen": "#ADFF5C",
   "black": "#000000",
   "darkgrey": "#222222",
-
   "clientId": "914948865218707497",
   "guildId": "914950472094322768",
   "roleChannelId": "926588749364740146",
-  "roleCommentId": "990222099891253328"
+  "roleCommentId": "991305541060149348"
 }

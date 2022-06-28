@@ -4,7 +4,8 @@
   "description": "\"# ITK-Discord-Bot\"",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\""
+    "test": "echo \"Error: no test specified\"",
+    "lint": "npx eslint **.js **/**.js"
   },
   "repository": {
     "type": "git",

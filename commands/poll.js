@@ -41,7 +41,7 @@ module.exports = {
         //Get the values
         const pollname = interaction.options.getString('name');
         const amount = interaction.options.getInteger('poll');
-        const t = interaction.options.getInteger('time') * 10000; // For testing
+        var t = interaction.options.getInteger('time') * 10000; // For testing
         //const t = interaction.options.getInteger('time') * 1000 * 60; // => to 1 sec => to 1 min 
         //Max 10 min.
         if(t > 60000) t = 60000;
