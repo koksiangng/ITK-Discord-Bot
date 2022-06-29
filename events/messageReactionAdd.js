@@ -1,12 +1,10 @@
 //https://discordjs.guide/creating-your-bot/event-handling.html#individual-event-files
-
 //https://stackoverflow.com/questions/66775729/how-can-i-find-the-id-of-a-custom-emoji-the-user-sent-and-add-it-to-the-server
-const config = require(`../config.json`);
 const secret = require(`../secret.json`);
 
 //Custom emoji
 
-//Adding upon message reaction.
+//Adding role upon message reaction.
 module.exports = {
 	name: 'messageReactionAdd',
 	async execute(reaction, user) {

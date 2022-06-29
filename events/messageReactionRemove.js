@@ -1,6 +1,4 @@
 //https://discordjs.guide/creating-your-bot/event-handling.html#individual-event-files
-
-const config = require(`../config.json`)
 const secret = require(`../secret.json`)
 
 //Remove upon message reaction
