@@ -2,6 +2,7 @@
 
 const { MessageEmbed } = require('discord.js');
 const config = require('../config.json');
+const secret = require('../secret.json');
 
 //On message create
 //message id length: 18
@@ -34,7 +35,7 @@ module.exports = {
 			//For some reason /d doesn't work. (returns null)
 			//let regexMessageId = new RegExp('[0-9]{18}', 'g');
 			//let messageId = message.content.match(regexMessageId);
-			let messageId = config.roleCommentId;
+			let messageId = secret.roleCommentId;
 
 			//Regex for matching all emojis:
 			//https://stackoverflow.com/questions/64509631/is-there-a-regex-to-match-all-unicode-emojis
@@ -147,7 +148,7 @@ module.exports = {
 			//For some reason /d doesn't work. (returns null)
 			//let regexMessageId = new RegExp('[0-9]{18}', 'g');
 			//let messageId = message.content.match(regexMessageId);
-			let messageId = config.roleCommentId;
+			let messageId = secret.roleCommentId;
 
 			//Regex for mention:
 			//https://www.reddit.com/r/Discord_Bots/comments/iicffv/if_anyone_needs_regex_to_match_an_emote_mention/

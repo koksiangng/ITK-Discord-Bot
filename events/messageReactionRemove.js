@@ -1,6 +1,7 @@
 //https://discordjs.guide/creating-your-bot/event-handling.html#individual-event-files
 
 const config = require(`../config.json`)
+const secret = require(`../secret.json`)
 
 //Remove upon message reaction
 module.exports = {
@@ -18,7 +19,7 @@ module.exports = {
 		}
 
 		//If the reactor is the bot - return
-		let clientId = config.clientId;
+		let clientId = secret.clientId;
 		if(user.id === clientId) return;
 
 		//Get message based on the reaction
